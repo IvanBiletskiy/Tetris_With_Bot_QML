@@ -77,16 +77,20 @@ function Area(width, height, cellsGUI) {
         if (!this.virtual) //для виртуальных полей незачем считать очки
             switch (countOfFullRows){ //в зависимости от того, сколько линий игрок собрал за раз - разное количество очков
             case 1:
-                score+=100;
+              //  score+=100;
+                score+=1;
                 break;
             case 2:
-                score+=300;
+                //score+=300;
+                score+=2;
                 break;
             case 3:
-                score+=700;
+                //score+=700;
+                score+=3;
                 break;
             case 4:
-                score+=1500;
+//                score+=1500;
+                score+=4;
                 break;
             }
         return countOfFullRows; //возвращает количество полных строк, нужно для использования виртуального поля ботом

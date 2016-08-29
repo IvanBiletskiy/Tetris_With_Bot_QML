@@ -35,7 +35,7 @@ function restartGame(){
             area.cells[i][j].setColor(0);
         }
     }
-    menu.visible = false; //выключаем меню
+    menu.visible = false; //выключаем меню    
     isPause=false; //убираем с паузы
     isGameOver=false; //больше не GameOver
     addNewFigure(); //добавляем новую фигуру

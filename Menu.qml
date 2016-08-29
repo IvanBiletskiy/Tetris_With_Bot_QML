@@ -1,6 +1,7 @@
 import QtQuick 1.1
 Item {
     property alias menuArea: menuArea
+    property bool isGameOver: false
     signal newGame
     signal continueGame
     signal exit
@@ -12,10 +13,12 @@ Item {
 
     anchors.fill: parent
     onGameover: {
+        isGameOver = true;
         gameOverPic.visible = true;
         continueGameButton.visible = false;
     }
     onNewGame: {
+        isGameOver = false;
         gameOverPic.visible = false;
         continueGameButton.visible = true;
     }
@@ -75,6 +78,7 @@ Item {
             pic.source: "/images/blueButton.png"
             text: "RUN AI"
             onClicked: {
+                if (isGameOver) newGame();
                 if (!isBotPlaying){
                     isBotPlaying = true;
                     text = "MANUAL GAME"

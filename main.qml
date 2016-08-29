@@ -59,7 +59,7 @@ Rectangle {
 
         Timer {
             id: botTimer
-            interval: 30
+            interval: 1
             repeat: true
             triggeredOnStart : true
             onTriggered:     {

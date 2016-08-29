@@ -48,9 +48,10 @@ function Area(width, height, cellsGUI) {
 
     // Закрепление фигуры на игровом поле
     this.fixFigure = function (figure) { //должен передаваться объект фигуры с blocks[], blockColor}
+        var cellX, cellY;
         for (var i = 0; i < figure.blocks.length; i++) {
-            var cellX = figure.blocks[i].x;
-            var cellY = figure.blocks[i].y;
+            cellX = figure.blocks[i].x;
+            cellY = figure.blocks[i].y;
             this.cells[cellX][cellY].isFree = false;
             this.cells[cellX][cellY].setColor(figure.blockColor);
         }
@@ -62,9 +63,10 @@ function Area(width, height, cellsGUI) {
 
     //функция проверки строк на то, собралась ли какая-либо из них
     this.checkRows = function (){
-        var countOfFullRows = 0;
+        var countOfFullRows = 0,
+            countInRow = 0;
         for (var j = 0; j < this.cells[0].length; j++) { //по каждой строке
-            var countInRow = 0;
+            countInRow = 0;
             for (var i = 0; i < this.cells.length; i++) { //считаем количество блоков в строке
                 if (!this.cells[i][j].isFree)
                     countInRow++;
@@ -112,15 +114,17 @@ function Area(width, height, cellsGUI) {
 
     //клонирование игрового поля
     this.clone = function () {
-        var _cells = []
+        var _cells = [],
+            _column = [],
+            cloneArea;
         for (var i = 0; i < width; i++) {
-            var _column = [];
+            _column = [];
             for (var j = 0; j < height; j++) {
                 _column.push(this.cells[i][j].clone());
             }
             _cells.push(_column);
         }
-        var cloneArea = new Area(width, height, cellsGUI);
+        cloneArea = new Area(width, height, cellsGUI);
         cloneArea.cells = _cells;
         return cloneArea;
     }

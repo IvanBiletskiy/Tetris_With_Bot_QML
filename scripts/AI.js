@@ -7,32 +7,36 @@ function FigureState(rotation, xCoord, rating, area) { //положение фи
 
 function AI(currentFigure, area) {
 
-    var virtualArea; //бот примеряет виртуальные фигуры, рассчитывает какими будут поля после примерки, определяет куда и как лучше притулить фигуру
-    var virtualFigure;
-    var potentialFigureStates;
-    var bestFigureState;
+    var virtualArea, //бот примеряет виртуальные фигуры, рассчитывает какими будут поля после примерки, определяет куда и как лучше притулить фигуру
+        virtualFigure,
+        potentialFigureStates,
+        bestFigureState;
 
 
     this.runAI = function () { //рассчет того, куда и как притулить выпавшую фигуру
-        potentialFigureStates = []; //возможные состояния фигурок
-        var figureStatesCount;
+        var figureStatesCount,
+            rotation,
+            x,
+            potentialfigureState;
+
+        potentialFigureStates = []; //возможные состояния фигурок        
         //создаем виртуальные клоны игрового поля и фигуры
         virtualArea = area.clone();
         virtualArea.virtual=true;
         virtualFigure = currentFigure.clone(virtualArea);
         virtualFigure.virtual = true;
 
-        for (var rotation = 0; rotation < 4; rotation++) { //для всех четырех положений
+        for (rotation = 0; rotation < 4; rotation++) { //для всех четырех положений
             rotateToRotation(virtualFigure, rotation); //вращаем до нужного положения
             figureStatesCount = virtualArea.cells.length-figureWidth(virtualFigure)+1; //вычисляем количесвто возможных положений
-            for (var x = 0; x < figureStatesCount; x++) { //для каждой ориентации
+            for (x = 0; x < figureStatesCount; x++) { //для каждой ориентации
                 moveFigureToXCoord(virtualFigure, x); //сдвигаем по горизонтали
                 while (virtualFigure._canMoveDown()) { //опускаем вниз до упора
                     virtualFigure.moveDown();
                 }
                 virtualFigure.moveDown(); //попытаться сдвинуть фигуру вниз, чтобы она закрепилась
 
-                var potentialfigureState = new FigureState(rotation, x, getStateRating(), virtualArea) //вычисляем критерий "хорошести" выбранного положения, запоминаем положение фигуры
+                potentialfigureState = new FigureState(rotation, x, getStateRating(), virtualArea) //вычисляем критерий "хорошести" выбранного положения, запоминаем положение фигуры
                 potentialFigureStates.push(potentialfigureState);
 
                 //заздаем новые копии оригинальных фигурки и поля
@@ -58,6 +62,7 @@ function AI(currentFigure, area) {
     //сдвиг фигуры в нужное положение по оси Х
     function moveFigureToXCoord(figure, xCoord) {
         var stepsCount = leftmostPoint(figure) - xCoord;
+
         if (stepsCount>0)
         {
             for (var i = 0; i < stepsCount; i++)
@@ -72,6 +77,7 @@ function AI(currentFigure, area) {
     //вращение фигуры до нужной ориентации
     function rotateToRotation(figure, rotation) {
         var countOfRotates;
+
         if (figure.rotation > rotation)
             countOfRotates = 4 - (figure.rotation - rotation);
         else
@@ -85,6 +91,7 @@ function AI(currentFigure, area) {
     //вычисление самой левой точки фигуры по Х
     function leftmostPoint(figure){
         var leftmostPoint = Infinity;
+
         for (var i = 0; i < figure.blocks.length; i++) {
             if (figure.blocks[i].x < leftmostPoint)
                 leftmostPoint = figure.blocks[i].x;
@@ -95,6 +102,7 @@ function AI(currentFigure, area) {
     //вычисление самой правой точки фигуры по Х
     function rightmostPoint(figure){
         var rightmostPoint = 0;
+
         for (var i = 0; i < figure.blocks.length; i++) {
             if (figure.blocks[i].x > rightmostPoint)
                 rightmostPoint = figure.blocks[i].x;
@@ -105,23 +113,26 @@ function AI(currentFigure, area) {
     //рассчет ширины фигуры
     function figureWidth(figure){
         var length = rightmostPoint(figure)-leftmostPoint(figure) + 1;
+
         return length;
     }
 
     //рассчет рейтинга положения фигуры
     function getStateRating() {
         //коефициенты для выбраных критериев
-        var const1 = -0.510066;
-        var const2 = 0.760666;
-        var const3 = -0.35663;
-        var const4 = -0.184483;
+        var const1 = -0.510066,
+            const2 = 0.760666,
+            const3 = -0.35663,
+            const4 = -0.184483;
+
         return (const1*getAggregateHeight()) + (const2*getCompliteLines()) + (const3*getHoles()) + (const4*getBumpiness());
     }
 
     //суммарная высота всех столбиков
     function getAggregateHeight() {
-        var aggregateHeight=0;
-        var columnHeight=0;
+        var aggregateHeight=0,
+            columnHeight=0;
+
         for (var i = 0; i < virtualArea.cells.length; i++) {
             columnHeight = 0;
             for (var j = 0; j < virtualArea.cells[i].length; j++) {
@@ -138,9 +149,10 @@ function AI(currentFigure, area) {
 
     //неравномерность столбиков, "выбоистость"
     function getBumpiness() {
-        var bumpiness = 0;
-        var previousColumnHeight;
-        var columnHeight;
+        var bumpiness = 0,
+            previousColumnHeight,
+            columnHeight;
+
         for (var i = 0; i < virtualArea.cells.length; i++) {
             columnHeight = 0;
             for (var j = 0; j < virtualArea.cells[i].length; j++) {
@@ -159,8 +171,9 @@ function AI(currentFigure, area) {
 
     //дырки
     function getHoles() {
-        var holes = 0;
-        var isColumnBegun = false;
+        var holes = 0,
+            isColumnBegun = false;
+
         for (var i = 0; i < virtualArea.cells.length; i++) {
             for (var j = 0; j < virtualArea.cells[i].length; j++) {
                 if (virtualArea.cells[i][j].isFree && !isColumnBegun) { //если ячейка свободна, но столбец еще не начался - пропускаем
@@ -206,6 +219,7 @@ function AI(currentFigure, area) {
     //вращение виртуальной фигуры с "протоколированием" всех действий
     function rotateToRotationAnimated(figure, rotation) {
         var countOfRotates;
+
         if (figure.rotation > rotation)
             countOfRotates = 4 - (figure.rotation - rotation);
         else
@@ -220,6 +234,7 @@ function AI(currentFigure, area) {
     //смещение по оси Х виртуальной фигуры с "протоколированием" всех действий
     function moveFigureToXCoordAnimated(figure, xCoord) {
         var stepsCount = leftmostPoint(figure) - xCoord;
+
         if (stepsCount>0)
         {
             for (var i = 0; i < stepsCount; i++) {

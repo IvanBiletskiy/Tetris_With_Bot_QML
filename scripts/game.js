@@ -1,18 +1,18 @@
 Qt.include("AI.js");
 Qt.include("Area.js");
 Qt.include("Figure.js");
-var area;
-var isPause = false;
-var isGameOver = false;
-var isBotPlaying = false;
-var cellsGUI;
-var cellSize;
-var currentFigure;
-var timerID;
-var commandsArray = [];
-var bot;
-var levelArray = ["auto",0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
-var currentLevelIterator = 0; //номер ячейки в массиве уровней
+var area,
+    isPause = false,
+    isGameOver = false,
+    isBotPlaying = false,
+    cellsGUI,
+    cellSize,
+    currentFigure,
+    timerID,
+    commandsArray = [],
+    bot,
+    levelArray = ["auto",0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
+    currentLevelIterator = 0; //номер ячейки в массиве уровней
 
 //первый запуск игры
 function startGame() {
@@ -114,8 +114,8 @@ function action(command){
 
 
 function addNewFigure() { //запускаем падать новую фигуру
-    var figureType = Math.floor(Math.random()*7)+1; // случайного типа
-    var currentFigureColor = Math.floor(Math.random()*7)+1; // и случайного цвета
+    var figureType = Math.floor(Math.random()*7)+1, // случайного типа
+        currentFigureColor = Math.floor(Math.random()*7)+1; // и случайного цвета
     switch (figureType) {
     case 1:
         currentFigure = new Line(Math.round(canvas.width/2/cellSize)-1, 0, currentFigureColor, area);
@@ -186,12 +186,13 @@ function runPlayerGame(){ //аналогично
 
 //Динамическое создание компонентов QML
 function createGUIComponents(){
-    var cellComponent = Qt.createComponent("Cell.qml");
+    var cellComponent = Qt.createComponent("Cell.qml"),
+        newCell;
     while (cellComponent.status !== Component.Ready) {}
     for (var i = 0; i < area.cells.length; i++) {
         var columnGUI = [];
         for (var j = 0; j < area.cells[i].length; j++) {
-            var newCell = cellComponent.createObject(canvas, {"x": cellSize*i, "y": cellSize*j, "width": cellSize, "type": 0, "anchors.fill": parent});
+            newCell = cellComponent.createObject(canvas, {"x": cellSize*i, "y": cellSize*j, "width": cellSize, "type": 0, "anchors.fill": parent});
             columnGUI.push(newCell);
         }
         cellsGUI.push(columnGUI);

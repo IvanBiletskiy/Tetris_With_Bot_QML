@@ -1,8 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>scripts/AI.js</file>
-        <file>scripts/Area.js</file>
-        <file>scripts/Figure.js</file>
-        <file>scripts/game.js</file>
-    </qresource>
-</RCC>

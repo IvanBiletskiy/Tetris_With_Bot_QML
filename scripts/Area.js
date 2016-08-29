@@ -77,33 +77,38 @@ function Area(width, height, cellsGUI) {
             }
         }
         if (!this.virtual) //для виртуальных полей незачем считать очки
-            switch (countOfFullRows){ //в зависимости от того, сколько линий игрок собрал за раз - разное количество очков
-            case 1:
-              //  score+=100;
-                score+=1;
-                break;
-            case 2:
-                //score+=300;
-                score+=2;
-                break;
-            case 3:
-                //score+=700;
-                score+=3;
-                break;
-            case 4:
-//                score+=1500;
-                score+=4;
-                break;
+            if (isChinaScoreSystem){
+                switch (countOfFullRows){ //в зависимости от того, сколько линий игрок собрал за раз - разное количество очков
+                case 1:
+                    score+=100;
+                    break;
+                case 2:
+                    score+=300;
+                    break;
+                case 3:
+                    score+=700;
+                    break;
+                case 4:
+                    score+=1500;
+                    break;
+                }
             }
+            else{
+                score+=countOfFullRows;
+            }
+
         return countOfFullRows; //возвращает количество полных строк, нужно для использования виртуального поля ботом
     }
 
 
     //удаление собравшейся строки
     this.deleteRow = function(rowNumber) {
-        for (var j = rowNumber; j > 0; j--) { //удаляем строку, остальные "падают" на одну вниз
+        for (var j = rowNumber; j >= 0; j--) { //удаляем строку, остальные "падают" на одну вниз
             for (var i = 0; i < this.cells.length; i++) {
-                this.cells[i][j]=this.cells[i][j-1];
+                if(j!==0)
+                    this.cells[i][j]=this.cells[i][j-1];
+                else
+                    this.cells[i][j]=new Cell(i,j);
                 cellsGUI[i][j].type = this.cells[i][j].blockColor;
             }
         }

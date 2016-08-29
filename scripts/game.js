@@ -2,6 +2,7 @@ Qt.include("AI.js");
 Qt.include("Area.js");
 Qt.include("Figure.js");
 var area,
+    isChinaScoreSystem = false,
     isPause = false,
     isGameOver = false,
     isBotPlaying = false,

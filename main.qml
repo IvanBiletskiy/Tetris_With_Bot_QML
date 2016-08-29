@@ -53,7 +53,7 @@ Rectangle {
             repeat: true
             onTriggered: {
                 level++;
-                timer.interval=1000/(Math.pow(1.25, level))
+                timer.interval=1000/(Math.pow(1.25, level));
             }
         }
 

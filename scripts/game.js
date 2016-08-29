@@ -86,7 +86,8 @@ function pauseOff(){
     isPause = false;
     if (!isBotPlaying) { //врубаем нужные таймеры
         timer.running = true;
-        levelTimer.running = true;
+        if (levelArray[currentLevelIterator]==="auto")
+            levelTimer.running = true;
     }
     else
         botTimer.running = true;
